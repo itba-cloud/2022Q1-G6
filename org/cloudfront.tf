@@ -1,12 +1,14 @@
+
 resource "aws_cloudfront_distribution" "s3_distribution" {
     provider = aws.aws
 
+
     origin {
-        domain_name = module.s3["website"].bucket_regional_domain_name // TODO: Esto esta roto
         origin_id   = module.s3["website"].id
+        domain_name = module.s3["website"].bucket_regional_domain_name // TODO: Esto esta roto
 
         s3_origin_config {
-            origin_access_identity = "origin-access-identity/cloudfront/ABCDEFG1234567"
+            origin_access_identity = "origin-access-identity/cloudfront/${module.s3["website"].oai.id}"
         }
     }
 
@@ -17,7 +19,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
 
     logging_config {
         include_cookies = false
-        bucket          = "mylogs.s3.amazonaws.com"
+        bucket          = module.s3["logs"].bucket_regional_domain_name//"mylogs.s3.amazonaws.com"
     }
 
 
@@ -85,12 +87,12 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
         viewer_protocol_policy = "redirect-to-https"
     }
 
-    price_class = "PriceClass_200"
+    price_class = "PriceClass_All"
 
     restrictions {
         geo_restriction {
-            restriction_type = "whitelist"
-            locations        = ["US", "CA", "GB", "DE"]
+            restriction_type = "none"
+            locations = []
         }
     }
 

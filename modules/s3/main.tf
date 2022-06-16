@@ -1,3 +1,6 @@
+resource "aws_cloudfront_origin_access_identity" "this" {
+  //comment = "Some comment"
+}
 
 # 1 - S3 bucket
 resource "aws_s3_bucket" "this" {

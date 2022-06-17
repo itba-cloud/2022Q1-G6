@@ -18,4 +18,8 @@ resource "aws_s3_object" "this" {
   key           = "index.html"
   content_type  = "text/html"
   storage_class = "STANDARD"
+  content = data.template_file.userdata.rendered
 }
+
+
+

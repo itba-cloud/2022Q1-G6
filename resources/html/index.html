@@ -4,10 +4,23 @@
     <head>
         <title>ITBA - Cloud grupo 6</title>
     </head>
-        
-        <body >
-            <h1>Hola mundo!</h1>     
-        </body>
-    </div>
+    <script>
+        function callLambda() {
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    document.getElementById("lambda").innerHTML = this.responseText;
+                }
+            };
+
+        xhttp.open("GET", "${ENDPOINT}/resource", true);
+        xhttp.send();   
+        }
+    </script>
+    <body >
+        <h1>Hola mundo!</h1>  
+        <p id="lambda"></p>   
+        <button onclick="callLambda()">Llama a la lambda</button>
+    </body>
 
 </html>

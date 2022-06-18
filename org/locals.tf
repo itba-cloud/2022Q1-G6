@@ -1,40 +1,67 @@
 locals {
-  bucket_name = "bucketgrupo6-itba-cloud-computing"
-  path        = "../resources"
 
-  s3 = {
+  # VPC
+	vpc = {
+		vpc_cidr = "10.0.0.0/16"
 
-    # 1 - Website
-    website = {
-      bucket_name = local.bucket_name
-      path        = "../resources"
+		az = ["us-east-1a", "us-east-1b"]
 
-      objects = {
-        error = {
-          filename     = "html/error.html"
-          content_type = "text/html"
-        },
-        index={
-          filename     = "html/index.html"
-          content_type = "text/html"
-        }
+		public_subnets = {
+			"us-east-1a" = 1
+			"us-east-1b" = 2
+		}
+
+		private_subnets = {
+			"us-east-1a" = 3
+			"us-east-1b" = 4
+		}
+	}
+
+	# S3
+	bucket_name = "bucketgrupo6-ines-itba-cloud-computing"
+	path        = "../resources"
+
+	s3 = {
+
+		# 1 - Website
+		website = {
+			bucket_name = local.bucket_name
+			path        = "../resources"
+
+			objects = {
+				error = {
+					filename     = "html/error.html"
+					content_type = "text/html"
+				},
+				index={
+					filename     = "html/index.html"
+					content_type = "text/html"
+				}
 
 
-      }
-    }
+			}
+		}
 
-    # 2 - WWW Website
-    www-website = {
-      bucket_name = "www.${local.bucket_name}"
-    }
+		# 2 - WWW Website
+		www-website = {
+			bucket_name = "www.${local.bucket_name}"
+		}
 
-    #Logs 
-    logs = {
-      bucket_name = "logs.${local.bucket_name}"
-    }
+		#Logs 
+		logs = {
+			bucket_name = "logs.${local.bucket_name}"
+		}
 
-    
+		
 
 
-  }
+	}
+
+	ec2 = {
+		# 1 - Instance
+		instance = {
+			instance_type = "t2.micro"
+			ami           = "ami-0b9c9e9c"
+		}
+	}
 }

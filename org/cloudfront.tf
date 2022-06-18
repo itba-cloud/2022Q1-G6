@@ -97,6 +97,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
     }
 
     tags = {
+        Name = "grupo6-production-cloudfront"
         Environment = "production"
     }
 

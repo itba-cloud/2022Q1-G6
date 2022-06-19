@@ -37,62 +37,75 @@ resource "aws_autoscaling_group" "this" {
 }
 
 # autoscaling policy
-# resource "aws_autoscaling_policy" "scaling" {
-#     name = "custom-autoscaling-policy"
-#     autoscaling_group_name = aws_autoscaling_group.this.name
-#     adjustment_type = "ChangeInCapacity"
-#     scaling_adjustment = 1
-#     cooldown = 60
-#     policy_type = "SimpleScaling"
-# }
+resource "aws_autoscaling_policy" "scaling" {
+    provider = aws.aws
+    name = "scaleup-autoscaling-policy"
+    autoscaling_group_name = aws_autoscaling_group.this.name
+    adjustment_type = "ChangeInCapacity"
+    scaling_adjustment = 1
+    cooldown = 60
+    policy_type = "SimpleScaling"
+}
 
-# # autoscaling watch alarm
-# resource "aws_cloudwatch_metric_alarm" "scaling" {
-#     alarm_name = "custom-cpu-alarm-scaleup"
-#     alarm_description = "alarm once cpu usage increases"
-#     comparison_operator = "GreaterThanOrEqualToThreshold"
-#     evaluation_periods = 2
-#     metric_name = "CPUUtilization"
-#     namespace = "AWS/EC2"
-#     period = 120
-#     statistic = "Average"
-#     threshold = 20
+# autoscaling watch alarm
+resource "aws_cloudwatch_metric_alarm" "scaling" {
+    provider = aws.aws
+    alarm_name = "cpu-alarm-scaleup"
+    alarm_description = "alarm once cpu usage increases"
+    comparison_operator = "GreaterThanOrEqualToThreshold"
+    evaluation_periods = 2
+    metric_name = "CPUUtilization"
+    namespace = "AWS/EC2"
+    period = 120
+    statistic = "Average"
+    threshold = 20
 
-#     dimensions = {
-#         "AutoScalingGroupName" = aws_autoscaling_group.this.name
-#     }
+    dimensions = {
+        "AutoScalingGroupName" = aws_autoscaling_group.this.name
+    }
 
-#     actions_enabled = true
-#     alarm_actions = [aws_autoscaling_policy.scaling.arn]
-# }
+    actions_enabled = true
+    alarm_actions = [aws_autoscaling_policy.scaling.arn]
+
+    tags = {
+        Name = "cpu-alarm-scaleup"
+    }
+}
 
 
-# # auto descaling policy
-# resource "aws_autoscaling_policy" "descaling" {
-#     name = "custom-autoscaling-policy"
-#     autoscaling_group_name = aws_autoscaling_group.this.name
-#     adjustment_type = "ChangeInCapacity"
-#     scaling_adjustment = -1
-#     cooldown = 60
-#     policy_type = "SimpleScaling"
-# }
+# auto descaling policy
+resource "aws_autoscaling_policy" "descaling" {
+    provider = aws.aws
+    name = "scaledown-autoscaling-policy"
+    autoscaling_group_name = aws_autoscaling_group.this.name
+    adjustment_type = "ChangeInCapacity"
+    scaling_adjustment = -1
+    cooldown = 60
+    policy_type = "SimpleScaling"
+}
 
-# # descaling cloud watch
-# resource "aws_cloudwatch_metric_alarm" "descaling" {
-#     alarm_name = "custom-cpu-alarm-scaledown"
-#     alarm_description = "alarm once cpu usage decreases"
-#     comparison_operator = "LessThanOrEqualToThreshold"
-#     evaluation_periods = 2
-#     metric_name = "CPUUtilization"
-#     namespace = "AWS/EC2"
-#     period = 120
-#     statistic = "Average"
-#     threshold = 10
 
-#     dimensions = {
-#         "AutoScalingGroupName" = aws_autoscaling_group.this.name
-#     }
+# descaling cloud watch
+resource "aws_cloudwatch_metric_alarm" "descaling" {
+    provider = aws.aws
+    alarm_name = "cpu-alarm-scaledown"
+    alarm_description = "alarm once cpu usage decreases"
+    comparison_operator = "LessThanOrEqualToThreshold"
+    evaluation_periods = 2
+    metric_name = "CPUUtilization"
+    namespace = "AWS/EC2"
+    period = 120
+    statistic = "Average"
+    threshold = 10
 
-#     actions_enabled = true
-#     alarm_actions = [aws_autoscaling_policy.descaling.arn]
-# }
+    dimensions = {
+        "AutoScalingGroupName" = aws_autoscaling_group.this.name
+    }
+
+    actions_enabled = true
+    alarm_actions = [aws_autoscaling_policy.descaling.arn]
+
+    tags = {
+        Name = "cpu-alarm-scaledown"
+    }
+}

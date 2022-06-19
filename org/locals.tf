@@ -1,6 +1,6 @@
 locals {
 
-  # VPC
+  	# VPC
 	vpc = {
 		vpc_cidr = "10.0.0.0/16"
 
@@ -57,6 +57,7 @@ locals {
 
 	}
 
+	# EC2
 	ec2 = {
 		# 1 - Instance
 		instance = {

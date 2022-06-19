@@ -1,4 +1,4 @@
-resource "aws_lb" "alb" {  
+resource "aws_lb" "this" {  
     name            = "alb"  
     subnets         = [for subnet in aws_subnet.public : subnet.id]
     security_groups = [aws_security_group.elb.id]
@@ -38,7 +38,7 @@ resource "aws_lb_target_group" "this" {
 }
 
 resource "aws_lb_listener" "alb_listener" {  
-    load_balancer_arn = aws_lb.alb.arn  
+    load_balancer_arn = aws_lb.this.arn  
     port              = 80  
     protocol          = "HTTP"
     

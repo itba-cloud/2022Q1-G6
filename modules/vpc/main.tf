@@ -1,5 +1,9 @@
 resource "aws_vpc" "this" {
     cidr_block = var.vpc_cidr
+
+    tags = {
+        Name = "vpc"
+    }
 }
 
 # Create a public subnet for each AZ in variables

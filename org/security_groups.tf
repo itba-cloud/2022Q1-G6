@@ -1,59 +1,9 @@
-resource "aws_lb" "this" {  
-    name            = "alb"  
-    subnets         = [for subnet in aws_subnet.public : subnet.id]
-    security_groups = [aws_security_group.elb.id]
-    internal        = false 
-    idle_timeout    = 60   
-    tags = {    
-        Name    = "alb"    
-    } 
-
-    enable_cross_zone_load_balancing = true
-}
-
-resource "aws_lb_target_group" "this" {  
-    name     = "alb-target-group"  
-    port     = "80"  
-    protocol = "HTTP"  
-    vpc_id   = aws_vpc.this.id  
-
-    tags = {    
-        name = "alb_target_group"    
-    }  
-
-    stickiness {    
-        type            = "lb_cookie"    
-        cookie_duration = 1800    
-        enabled         = true 
-    }   
-
-    health_check {    
-        healthy_threshold   = 3    
-        unhealthy_threshold = 10    
-        timeout             = 5    
-        interval            = 10    
-        path                = "/"
-        port                = 80
-    }
-}
-
-resource "aws_lb_listener" "alb_listener" {  
-    load_balancer_arn = aws_lb.this.arn  
-    port              = 80  
-    protocol          = "HTTP"
-    
-    default_action {    
-        target_group_arn = aws_lb_target_group.this.arn
-        type             = "forward"  
-    }
-}
-
-
 # Load Balancer Security Group
 resource "aws_security_group" "elb" {
-    name = "custom-elb-sg"
+    provider = aws.aws
+    name = "alb-sg"
     description = "Custom ELB Security Group"
-    vpc_id = aws_vpc.this.id
+    vpc_id = module.vpc.vpc_id
 
     # Inbound Rules
     # HTTP access from anywhere
@@ -90,14 +40,15 @@ resource "aws_security_group" "elb" {
     }
 
     tags = {
-        Name = "custom-elb-sg"
+        Name = "alb-sg"
     }
 }
 
 # Instance Security Group
 resource "aws_security_group" "instance" {
-    vpc_id = aws_vpc.this.id
-    name = "custom-instance-sg"
+    provider = aws.aws
+    vpc_id = module.vpc.vpc_id
+    name = "instance-sg"
     description = "security group for instances"
 
     # Inbound Rules
@@ -135,6 +86,6 @@ resource "aws_security_group" "instance" {
     }
 
     tags = {
-        Name = "custom-instance-sg"
+        Name = "ec2-instance-sg"
     }
 }

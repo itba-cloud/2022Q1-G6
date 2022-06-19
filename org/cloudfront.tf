@@ -14,8 +14,8 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
 
     # Load Balancer (APP)
     origin {
-        domain_name = module.vpc.lb_dns_name
-        origin_id = module.vpc.lb_id
+        domain_name = aws_lb.this.dns_name
+        origin_id = aws_lb.this.id
         custom_origin_config {
             http_port = 80
             https_port = 443
@@ -61,7 +61,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
         path_pattern = "/api/*"
         allowed_methods  = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
         cached_methods   = ["GET", "HEAD", "OPTIONS"]
-        target_origin_id = module.vpc.lb_id
+        target_origin_id = aws_lb.this.id
 
         forwarded_values {
             query_string = true
@@ -75,7 +75,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
         default_ttl            = 86400
         max_ttl                = 31536000
         compress               = true
-        viewer_protocol_policy = "allow-any"
+        viewer_protocol_policy = "allow-all"
     }
 
     # Cache behavior with precedence 0
@@ -133,8 +133,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
     }
 
     tags = {
-        Name = "grupo6-production-cloudfront"
-        Environment = "production"
+        Name = "cloudfront"
     }
 
     viewer_certificate {

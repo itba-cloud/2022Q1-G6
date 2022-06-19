@@ -6,11 +6,12 @@ provider "aws" {
 
   default_tags {
     tags = {
-      author     = "Grupo 6"
-      version    = 1
-      university = "ITBA"
-      subject    = "Cloud Computing"
-      created-by = "terraform"
+      Owner     = "Grupo 6"
+      Version    = 1
+      University = "ITBA"
+      Project    = "Cloud Computing"
+      Created-By = "terraform"
+      Environment = "dev"
     }
   }
 }

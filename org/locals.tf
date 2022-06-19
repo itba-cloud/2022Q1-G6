@@ -59,10 +59,6 @@ locals {
 
 	# EC2
 	ec2 = {
-		# 1 - Instance
-		instance = {
-			instance_type = "t2.micro"
-			ami           = "ami-0b9c9e9c"
-		}
+		instance_type = "t2.micro"
 	}
 }

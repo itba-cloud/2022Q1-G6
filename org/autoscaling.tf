@@ -1,18 +1,9 @@
-data "aws_ami" "ubuntu" {
-	most_recent = true
-	owners = ["099720109477"] # Canonical official
-
-	filter {
-		name   = "name"
-		values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
-	}
-}
-
 # autoscaling launch configuration
 resource "aws_launch_configuration" "this" {
+    provider = aws.aws
     name_prefix = "custom-launch-configuration-"
     image_id = data.aws_ami.ubuntu.id
-    instance_type = "t2.micro"
+    instance_type = local.ec2.instance_type
 
     security_groups = [aws_security_group.instance.id]
 
@@ -25,8 +16,9 @@ resource "aws_launch_configuration" "this" {
 
 # autoscaling group
 resource "aws_autoscaling_group" "this" {
+    provider = aws.aws
     name = "custom-autoscaling-group"
-    vpc_zone_identifier = [for subnet in aws_subnet.private : subnet.id]
+    vpc_zone_identifier = keys(module.vpc.vpc_private_subnets)
     launch_configuration = aws_launch_configuration.this.name
     min_size = 2
     max_size = 5

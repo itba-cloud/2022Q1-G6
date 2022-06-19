@@ -19,11 +19,3 @@ output "vpc_private_subnets" {
         subnet.id => subnet.cidr_block
     }
 }
-
-output "lb_id" {
-    value = aws_lb.this.id
-}
-
-output "lb_dns_name" {
-    value = aws_lb.this.dns_name
-}

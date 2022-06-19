@@ -6,6 +6,10 @@ resource "aws_cloudfront_origin_access_identity" "this" {
 resource "aws_s3_bucket" "this" {
     bucket              = var.bucket_name
     object_lock_enabled = false
+
+    tags = {
+        Name = "bucket"
+    }
 }
 
 # 2 -Bucket policy
@@ -44,4 +48,8 @@ resource "aws_s3_object" "this" {
     source        = try(each.value.rendered, format("../resources/%s", each.value.filename)) # where is the file located
     content_type  = each.value.content_type
     storage_class = try(each.value.tier, "STANDARD")
+
+    tags = {
+        Name = format("bucket-object-%s", each.key)
+    }
 }

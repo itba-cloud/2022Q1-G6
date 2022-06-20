@@ -5,11 +5,18 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
     # S3 bucket
     origin {
         origin_id   = module.s3["website"].id
-        domain_name = module.s3["website"].bucket_regional_domain_name
+        domain_name = module.s3["website"].website_endpoint
 
-        s3_origin_config {
-            origin_access_identity = "origin-access-identity/cloudfront/${module.s3["website"].oai.id}"
+        custom_origin_config {
+            http_port              = "80"
+            https_port             = "443"
+            origin_protocol_policy = "http-only"
+            origin_ssl_protocols   = ["TLSv1", "TLSv1.1", "TLSv1.2"]
         }
+
+     #   s3_origin_config {
+     #       origin_access_identity = "origin-access-identity/cloudfront/${module.s3["website"].oai.id}"
+     #   }
     }
 
     # Load Balancer (APP)
@@ -27,7 +34,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
 
     enabled             = true
     is_ipv6_enabled     = true
-    comment             = "Some comment"
+    comment             = "Distribution for Load Balancer and S3 website" 
     default_root_object = "index.html"
 
     # Logging S3

@@ -11,19 +11,3 @@ module "s3" {
 	objects     = try(each.value.objects, {})
 }
 
-resource "aws_s3_object" "this" {
-    provider = aws.aws
-
-    bucket        = module.s3["website"].id
-    key           = "index.html"
-    content_type  = "text/html"
-    storage_class = "STANDARD"
-    content = data.template_file.userdata.rendered
-
-    tags = {
-      	Name = "s3-object-website"
-    }
-}
-
-
-

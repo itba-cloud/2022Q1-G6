@@ -15,7 +15,7 @@ output "bucket_regional_domain_name" {
 
 output "website_endpoint" {
     description = "The website endpoint, if the bucket is configured with a website. If not, this will be an empty string"
-    value       = aws_s3_bucket.this.website_endpoint
+    value       = aws_s3_bucket_website_configuration.this.website_endpoint
 }
 
 output "oai" {

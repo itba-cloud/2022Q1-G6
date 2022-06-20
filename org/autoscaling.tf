@@ -7,7 +7,7 @@ resource "aws_launch_configuration" "this" {
 
     security_groups = [aws_security_group.instance.id]
 
-    user_data = "${file("/Users/ines/HEAVY/cloud-tp3/modules/vpc/initiate.sh")}"
+    user_data = "${file("../modules/vpc/initiate.sh")}"
 
     lifecycle {
         create_before_destroy = true

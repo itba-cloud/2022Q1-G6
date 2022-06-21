@@ -18,7 +18,7 @@ locals {
   }
 
   # S3
-  bucket_name = "bucketgrupo6-ines-itba-cloud-computing"
+  bucket_name = "bucketgrupo6-tp-itba-cloud-computing"
   path        = "../resources"
 
   s3 = {
